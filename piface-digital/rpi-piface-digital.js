@@ -37,6 +37,21 @@ module.exports = function (RED) {
         "Address 2": 2,
         "Address 3": 3
     }
+    
+    function  PiFACEDigitalOutputStateNode(n) {
+        RED.nodes.createNode(this, n);
+        this.hardware = hardwaretable[n.hardware];
+        var node = this;
+        if (node.pin >= 0) {
+          PIFD.PIFaceDigital.prototype.getOutput = function() { return this.pi.getOutput(); };
+          node.pi = new PIFD.PIFaceDigital(node.hardware, true);
+          node.on("input", function (msg) {
+            node.val = node.pi.getOutput();
+            var msg = {topic: msg.topic, payload: node.val};
+            node.send(msg);
+          });
+      }
+    }
 
 
     function PiFACEDigitalInNode(n) {
@@ -60,7 +75,7 @@ module.exports = function (RED) {
             }
             node.on("input", function (msg) {
                 node.val = node.pi.get(node.pin);
-                var msg = {topic: "piface/" + node.npin, payload: node.val};
+                var msg = {topic: "piface/" + node.npin, payload: node.val, triggered: true};
                 node.send(msg);
             });
 
@@ -79,8 +94,6 @@ module.exports = function (RED) {
             };
             node.pi.watch(node.pin, callback);
             node.status({fill: "green", shape: "dot", text: node.val});
-            var msg = {topic: "piface/" + node.npin, payload: node.val};
-            node.send(msg);
         } else {
             node.error("Invalid PiFACE pin: " + node.pin);
             node.status({fill: "red", shape: "ring", text: "misconfigured"}, true);
@@ -124,4 +137,5 @@ module.exports = function (RED) {
 
     RED.nodes.registerType("rpi-piface-digital in", PiFACEDigitalInNode);
     RED.nodes.registerType("rpi-piface-digital out", PiFACEDigitalOutNode);
+    RED.nodes.registerType("rpi-piface-digital output state", PiFACEDigitalOutputStateNode);
 }
