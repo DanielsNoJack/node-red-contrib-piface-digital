@@ -76,4 +76,13 @@ depending on the value passed in. Expects a `msg.payload` with either a
 The PiFace input node generates a `msg.payload` with either a 0 or 1
 depending on the state of the input pin.
 
+Can be triggered in flow by any input msg, then send state with msg.triggered = true
+
 The `msg.topic` is set to <i>piface/{the pin number}</i>
+
+### Output State
+
+The PiFace output State node will send state of all output pins in array, 
+or state of selected output pin determined by msg.pin with value from 1 to 8.
+
+
