@@ -190,7 +190,8 @@
 </script>
 
 <script type="text/x-red" data-help-name="rpi-piface-digital output state">
-    <p>Raspberry Pi PiFace Digital output state node. Generates a <code>msg.payload</code> with state of 8 outputs. 
+    <p>Raspberry Pi PiFace Digital output state node. Generates a <code>msg.payload</code> with state of 8 outputs in array or
+    only one value if msg.pin is set to number 1..8 
     </p>
     <p>Based on tualo/node-pifacedigital. Please follow the installation instructions for the prequesits on <a href="https://github.com/tualo/node-pifacedigital" target="_blank">the github page of PI Face Digital</a>. The PI Face Digital node will be installed together with this node-red-node.</p>
     <p><b>Note:</b> Some versions of the PiFace relabelled the switch inputs to be 0 - 7 instead of 1 - 8. 

@@ -37,22 +37,28 @@ module.exports = function (RED) {
         "Address 2": 2,
         "Address 3": 3
     }
-    
-    function  PiFACEDigitalOutputStateNode(n) {
+  
+    function PiFACEDigitalOutputStateNode(n) {
         RED.nodes.createNode(this, n);
         this.hardware = hardwaretable[n.hardware];
         var node = this;
-        if (node.pin >= 0) {
-          PIFD.PIFaceDigital.prototype.getOutput = function() { return this.pi.getOutput(); };
-          node.pi = new PIFD.PIFaceDigital(node.hardware, true);
-          node.on("input", function (msg) {
-            node.val = node.pi.getOutput();
-            var msg = {topic: msg.topic, payload: node.val};
-            node.send(msg);
-          });
-      }
+        node.pi = new PIFD.PIFaceDigital(node.hardware, true);
+        node.on("input", function (msg) {
+          node.val = node.pi.getOutput();
+          var outputState = [];
+          //var i;
+          for (var i=0; i<8; i++)
+          {
+            outputState[i] = (node.val >> i) & 1;             
+          }
+          if (msg.pin)
+          {
+              outputState = outputState[msg.pin - 1] 
+          }
+          var msg = {topic: msg.topic, payload: outputState};
+          node.send(msg);
+        });
     }
-
 
     function PiFACEDigitalInNode(n) {
         RED.nodes.createNode(this, n);
