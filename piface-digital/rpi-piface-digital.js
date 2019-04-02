@@ -86,8 +86,6 @@ module.exports = function (RED) {
             });
 
             var callback = function (pin, type) {
-                node.error("Callback");
-
                 // Type will be 'lohi' or 'hilo'.
                 if (type == 'lohi') {
                     node.val = 1;
