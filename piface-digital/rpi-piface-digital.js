@@ -118,6 +118,7 @@ module.exports = function (RED) {
             node.pi = new PIFD.PIFaceDigital(node.hardware, true);
             if (node.set) {
                 node.pi.set(node.pin, Number(node.level));
+                node.status({fill: "green", shape: "ring", text: Number(node.level)}, true);
             }
             node.on("input", function (msg) {
                 if (msg.payload === "true") {
@@ -129,6 +130,7 @@ module.exports = function (RED) {
                 var out = Number(msg.payload);
                 if ((out === 0) | (out === 1)) {
                     node.pi.set(node.pin, Number(out));
+                    node.status({fill: "green", shape: "ring", text: out}, true);
                 } else {
                     node.warn("Invalid input - not 0 or 1");
                 }
